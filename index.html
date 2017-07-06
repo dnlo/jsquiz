@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en" class="sans-serif measure center pa3">
+<head>
+  <meta charset="utf-8">
+  <title>Napravi internet prodavnicu</title>
+  <meta name="author" content="dnlo">
+  <meta name="description" content="default description">
+  <meta name="keywords" content="tag1,tag2,tag3">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="/css/tachyons.css">
+  <link rel="stylesheet" type="text/css" href="/css/vhs.css">
+  <script src="/js/cell.js"></script>
+<style>
+  *{ margin: 0; padding: 0; }
+  .hide {visibility: hidden;}
+  .show {visibility: visible;}
+</style>
+</head>
+<body>
+  <main class="pa0 ma0">
+    <h1 class="f3 ma2">Kazite nam vise o vasem poslu?</h1>
+    <span id="back" class="pointer hide"> < bpck</span>
+    <span id="brPitanja"></span>
+    <div id="tabla">
+      <h3 id="pitanje" class="f4 ml2 mt4 pl2"></h3>
+      <ul id="odgovori" class="list ml2 pointer">
+        <li class="odg pa2"></li>
+        <li class="odg pa2"></li>
+        <li class="odg pa2"></li>
+      </ul>
+    </div>
+  </main>
+<script>
+
+pitanje1 = 
+  { pitanje: "Koliko volite sladoled?",
+    odgovori: [
+      "puno",
+      "onako",
+      "ovako"
+    ]
+  }
+pitanje2 = 
+  { pitanje: "Koliko volite baku?",
+    odgovori: [
+      "dsa puno",
+      "ovako",
+      "onako",
+    ]
+  }
+
+var STYLES = {
+  active: ["white", "bg-green", "active"],
+  animationNext: ["vhs-left", "vhs-duration-4"],
+  animationBack: ["vhs-right", "vhs-duration-4"]
+}
+var brPitanjaHTML = document.querySelector("#brPitanja");
+var tablaHTML = document.querySelector("#tabla");
+var pitanjeHTML = document.querySelector("#pitanje");
+var odgovoriHTML = document.querySelector("#odgovori");
+var backHTML = document.querySelector("#back");
+var answerList = [];
+var pitanjaList = [pitanje1, pitanje2];
+var pitanjeIndex = 0;
+
+showBack = function() {
+  if(pitanjeIndex > 0) {
+      backHTML.classList.remove("hide");
+  } else {
+      backHTML.classList.add("hide");
+  }
+}
+
+loadQuestion = function(pitanje) { 
+  pitanjeHTML.innerHTML = pitanje.pitanje;
+  for (var i = 0; i < pitanje.odgovori.length; i++) {
+      odgovoriHTML.children[i].innerHTML = pitanje.odgovori[i]
+  }
+  showBack();
+  brPitanjaHTML.innerHTML = pitanjeIndex + 1;
+  
+}
+nextQuestion = function() {
+  tablaHTML.classList.add(...STYLES.animationNext);
+  pitanjeIndex += 1;
+  loadQuestion(pitanjaList[pitanjeIndex]);
+}
+
+previousQuestion = function() {
+  tablaHTML.classList.add(...STYLES.animationBack);
+  pitanjeIndex -= 1;
+  loadQuestion(pitanjaList[pitanjeIndex]);
+  answerList.pop();
+}
+resetActive = function() {
+  for (var i = 0; i < odgovoriHTML.children.length; i++) {
+    odgovoriHTML.children[i].classList.remove(...STYLES.active);
+  }
+}
+
+confirmAnswer = function(e, b) {
+  if (e.target.classList.contains("active")) {
+      answerList.push(e.target.innerHTML);
+      nextQuestion();
+      // vraca gresku ali radi ono sto hocu TODO
+      b = resetActive();
+      b();
+  }    
+}
+
+anwser = function(e) {
+  confirmAnswer(e);
+  resetActive();
+  if (e.target.classList.contains("odg")) {
+    e.target.classList.add(...STYLES.active);
+  }
+}
+
+loadQuestion(pitanjaList[pitanjeIndex]);
+
+odgovoriHTML.addEventListener('click', function(e){
+  anwser(e);
+});
+
+backHTML.addEventListener('click', function(){
+  previousQuestion();
+});
+
+tablaHTML.addEventListener('webkitAnimationEnd', function(e) {
+  e.target.classList.remove(...STYLES.animationBack);
+  e.target.classList.remove(...STYLES.animationNext);
+});
+
+</script>
+</body>
+</html>
