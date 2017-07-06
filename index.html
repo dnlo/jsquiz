@@ -9,7 +9,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" type="text/css" href="/css/tachyons.css">
   <link rel="stylesheet" type="text/css" href="/css/vhs.css">
-  <script src="/js/cell.js"></script>
 <style>
   *{ margin: 0; padding: 0; }
   .hide {visibility: hidden;}
@@ -71,7 +70,14 @@ showBack = function() {
   }
 }
 
+resetActive = function() {
+  for (var i = 0; i < odgovoriHTML.children.length; i++) {
+    odgovoriHTML.children[i].classList.remove(...STYLES.active);
+  }
+}
+
 loadQuestion = function(pitanje) { 
+  resetActive();
   pitanjeHTML.innerHTML = pitanje.pitanje;
   for (var i = 0; i < pitanje.odgovori.length; i++) {
       odgovoriHTML.children[i].innerHTML = pitanje.odgovori[i]
@@ -92,30 +98,25 @@ previousQuestion = function() {
   loadQuestion(pitanjaList[pitanjeIndex]);
   answerList.pop();
 }
-resetActive = function() {
-  for (var i = 0; i < odgovoriHTML.children.length; i++) {
-    odgovoriHTML.children[i].classList.remove(...STYLES.active);
-  }
-}
 
-confirmAnswer = function(e, b) {
+confirmAnswer = function(e) {
   if (e.target.classList.contains("active")) {
       answerList.push(e.target.innerHTML);
       nextQuestion();
-      // vraca gresku ali radi ono sto hocu TODO
-      b = resetActive();
-      b();
+      return true;
   }    
 }
 
 anwser = function(e) {
-  confirmAnswer(e);
+  if(confirmAnswer(e)) {
+      return
+  }
   resetActive();
   if (e.target.classList.contains("odg")) {
     e.target.classList.add(...STYLES.active);
   }
 }
-
+// start app
 loadQuestion(pitanjaList[pitanjeIndex]);
 
 odgovoriHTML.addEventListener('click', function(e){
@@ -126,7 +127,7 @@ backHTML.addEventListener('click', function(){
   previousQuestion();
 });
 
-tablaHTML.addEventListener('webkitAnimationEnd', function(e) {
+tablaHTML.addEventListener('animationend', function(e) {
   e.target.classList.remove(...STYLES.animationBack);
   e.target.classList.remove(...STYLES.animationNext);
 });
