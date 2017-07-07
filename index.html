@@ -23,23 +23,25 @@
     <div id="tabla">
       <h3 id="pitanje" class="f4 ml2 mt4 pl2"></h3>
       <ul id="odgovori" class="list ml2 pointer">
-        <li class="odg pa2"></li>
-        <li class="odg pa2"></li>
-        <li class="odg pa2"></li>
+<!--        <li class="odg pa2"></li> -->
       </ul>
     </div>
   </main>
 <script>
+
 var pitanja = [
   { pitanje: "Koliko volite sladoled?",
     odgovori: [
-      "puno",
-      "onako",
-      "ovako"
+      "1-1",
+      "1-2",
+      "1-3"
     ]
   },
   { pitanje: "Koliko volite baku?",
     odgovori: [
+      "dsa puno",
+      "dsa puno",
+      "dsa puno",
       "dsa puno",
       "ovako",
       "onako",
@@ -85,8 +87,20 @@ resetActive = function() {
 loadQuestion = function(pitanje) { 
   resetActive();
   pitanjeHTML.innerHTML = pitanje.pitanje;
+  var kolikoPitanja = odgovoriHTML.childNodes.length;
   for (var i = 0; i < pitanje.odgovori.length; i++) {
-      odgovoriHTML.children[i].innerHTML = pitanje.odgovori[i]
+    var odgovorNode = document.createElement("li");
+    var odgovorText = document.createTextNode(pitanje.odgovori[i]);
+    odgovorNode.appendChild(odgovorText);
+    odgovorNode.classList.add("odg", "pa2", "o"+String(pitanjeIndex + 1));
+    odgovoriHTML.appendChild(odgovorNode);
+  }
+  // TODO da stavim ovo u funkciju da ga ne pisem dva puta
+  var staraPitanja = document.querySelectorAll('.o'+String(pitanjeIndex));
+  if (pitanjeIndex > 0) {
+    for (var i = 0; i <  staraPitanja.length; i++) {
+      staraPitanja[i].remove();
+    }
   }
   showBackButton();
   brPitanjaHTML.innerHTML = pitanjeIndex + 1;
@@ -103,6 +117,10 @@ previousQuestion = function() {
   pitanjeIndex -= 1;
   loadQuestion(pitanja[pitanjeIndex]);
   answerList.pop();
+  var staraPitanja = document.querySelectorAll('.o'+String(pitanjeIndex + 2 ));
+  for (var i = 0; i <  staraPitanja.length; i++) {
+    staraPitanja[i].remove();
+  }
 }
 
 confirmAnswer = function(e) {
