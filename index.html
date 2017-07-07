@@ -30,23 +30,30 @@
     </div>
   </main>
 <script>
-
-pitanje1 = 
+var pitanja = [
   { pitanje: "Koliko volite sladoled?",
     odgovori: [
       "puno",
       "onako",
       "ovako"
     ]
-  }
-pitanje2 = 
+  },
   { pitanje: "Koliko volite baku?",
     odgovori: [
       "dsa puno",
       "ovako",
       "onako",
     ]
+  },
+  { pitanje: "Kako ste dosli na svet?",
+    odgovori: [
+      "polako",
+      "ovako",
+      "onako",
+    ]
   }
+];
+
 
 var STYLES = {
   active: ["white", "bg-green", "active"],
@@ -59,10 +66,9 @@ var pitanjeHTML = document.querySelector("#pitanje");
 var odgovoriHTML = document.querySelector("#odgovori");
 var backHTML = document.querySelector("#back");
 var answerList = [];
-var pitanjaList = [pitanje1, pitanje2];
 var pitanjeIndex = 0;
 
-showBack = function() {
+showBackButton = function() {
   if(pitanjeIndex > 0) {
       backHTML.classList.remove("hide");
   } else {
@@ -82,20 +88,20 @@ loadQuestion = function(pitanje) {
   for (var i = 0; i < pitanje.odgovori.length; i++) {
       odgovoriHTML.children[i].innerHTML = pitanje.odgovori[i]
   }
-  showBack();
+  showBackButton();
   brPitanjaHTML.innerHTML = pitanjeIndex + 1;
   
 }
 nextQuestion = function() {
   tablaHTML.classList.add(...STYLES.animationNext);
   pitanjeIndex += 1;
-  loadQuestion(pitanjaList[pitanjeIndex]);
+  loadQuestion(pitanja[pitanjeIndex]);
 }
 
 previousQuestion = function() {
   tablaHTML.classList.add(...STYLES.animationBack);
   pitanjeIndex -= 1;
-  loadQuestion(pitanjaList[pitanjeIndex]);
+  loadQuestion(pitanja[pitanjeIndex]);
   answerList.pop();
 }
 
@@ -117,7 +123,7 @@ anwser = function(e) {
   }
 }
 // start app
-loadQuestion(pitanjaList[pitanjeIndex]);
+loadQuestion(pitanja[pitanjeIndex]);
 
 odgovoriHTML.addEventListener('click', function(e){
   anwser(e);
