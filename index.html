@@ -62,6 +62,7 @@ var STYLES = {
   animationNext: ["vhs-left", "vhs-duration-4"],
   animationBack: ["vhs-right", "vhs-duration-4"]
 }
+var ukupnoPitanja = pitanja.length;
 var brPitanjaHTML = document.querySelector("#brPitanja");
 var tablaHTML = document.querySelector("#tabla");
 var pitanjeHTML = document.querySelector("#pitanje");
@@ -96,6 +97,7 @@ loadQuestion = function(pitanje) {
     odgovoriHTML.appendChild(odgovorNode);
   }
   // TODO da stavim ovo u funkciju da ga ne pisem dva puta
+  // sigurno moze da se uradi efikasnije da: ne dodajem klasu prema kojoj brisem
   var staraPitanja = document.querySelectorAll('.o'+String(pitanjeIndex));
   if (pitanjeIndex > 0) {
     for (var i = 0; i <  staraPitanja.length; i++) {
@@ -124,7 +126,7 @@ previousQuestion = function() {
 }
 
 confirmAnswer = function(e) {
-  if (e.target.classList.contains("active")) {
+  if (e.target.classList.contains("active") && ukupnoPitanja > (pitanjeIndex + 1) ) {
       answerList.push(e.target.innerHTML);
       nextQuestion();
       return true;
